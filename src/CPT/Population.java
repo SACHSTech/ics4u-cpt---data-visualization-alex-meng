@@ -2,10 +2,12 @@ package CPT;
 
 import java.io.*;
 import CPT.Country;
-import CPT.Methods;
+import CPT.Lists;
 
 import javafx.scene.Scene;
 import javafx.application.Application;
+
+import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
@@ -17,10 +19,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 
 
 public class Population extends Application{
+    
     public static void main(String[] args) throws IOException {
         BufferedReader csvReader = new BufferedReader(new FileReader("src/CPT/population.csv"));
         BufferedReader key = new BufferedReader(new InputStreamReader(System.in));
         HashMap<String, Country> Nations = new HashMap<String, Country>();
+        ArrayList <Country> Countries = new ArrayList<Country>();
         String country;
         String prevCountry = "";
         String cName = " ";
@@ -31,12 +35,15 @@ public class Population extends Application{
             country = data[0];
             if(!prevCountry.equalsIgnoreCase(country)){
                 Nations.put(data[0], new Country(data[0], data[2], data[3]));
+                Countries.add(new Country(data[0], data[2], data[3]));
             }
 
             prevCountry = country;
         }
 
         csvReader.close();
+        final Lists list = new Lists();
+        list.setList(Countries);
 
         launch(args);
 
@@ -68,13 +75,23 @@ public class Population extends Application{
         primaryStage.show();
     }
 
-    public Parent createContent(){
+    public Parent createContent() throws IOException{
+        BufferedReader csvReader = new BufferedReader(new FileReader("src/CPT/population.csv"));
+        ObservableList<Country> data = FXCollections.observableArrayList();
+        String country;
+        String prevCountry = "";
 
-        final ObservableList<Country> data = FXCollections.observableArrayList(
-            new Country("Canada", "2012", "34922000"),
-            new Country("United States", "2012", "314044000"),
-            new Country("Mexico", "2012", "117274000")
-        );
+        while(csvReader.readLine() != null){
+            String line[] = csvReader.readLine().split(",");
+            country = line[0];
+            if(!prevCountry.equalsIgnoreCase(country)){
+                data.add(new Country(line[0], line[2], line[3]));
+            }
+
+            prevCountry = country;
+        }
+
+        csvReader.close();
 
         TableColumn Nation = new TableColumn();
         Nation.setText("Country");
