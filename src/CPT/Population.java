@@ -16,6 +16,9 @@ import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.VBox;
+import javafx.scene.control.ChoiceBox;
+import javafx.geometry.Pos;
 
 
 public class Population extends Application{
@@ -42,10 +45,18 @@ public class Population extends Application{
         }
 
         csvReader.close();
-        final Lists list = new Lists();
-        list.setList(Countries);
+       // final Lists list = new Lists();
+        //list.setList(Countries);
 
-        launch(args);
+        //launch(args);
+
+        int intCount;
+        Country.sortPop(Countries);
+        //int[] arr = {1, 5, 3, 6, 9, 2, 3, 4, 8};
+        //Lists.mergeSort(arr);
+        //for(intCount = 0; intCount < Countries.size(); intCount ++){
+            //System.out.println(Countries.get(intCount));
+        //}
 
        while(!cName.equals("")){
         System.out.println("Print Country Name: ");
@@ -71,11 +82,11 @@ public class Population extends Application{
     }
 
     @Override public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(createContent()));
+        primaryStage.setScene(new Scene(createTable()));
         primaryStage.show();
     }
 
-    public Parent createContent() throws IOException{
+    public Parent createTable() throws IOException{
         BufferedReader csvReader = new BufferedReader(new FileReader("src/CPT/population.csv"));
         ObservableList<Country> data = FXCollections.observableArrayList();
         String country;
@@ -84,9 +95,9 @@ public class Population extends Application{
         while(csvReader.readLine() != null){
             String line[] = csvReader.readLine().split(",");
             country = line[0];
-            if(!prevCountry.equalsIgnoreCase(country)){
+            //if(!prevCountry.equalsIgnoreCase(country)){
                 data.add(new Country(line[0], line[2], line[3]));
-            }
+            //}
 
             prevCountry = country;
         }
@@ -110,6 +121,13 @@ public class Population extends Application{
         tableView.setItems(data);
         tableView.getColumns().addAll(Nation, Year, Population);
 
-        return tableView;
+        ChoiceBox cb = new ChoiceBox();
+        cb.getItems().addAll(" ", "Cat", "Horse");
+        cb.getSelectionModel().selectFirst();
+
+        VBox UI = new VBox(2);
+        UI.setAlignment(Pos.CENTER_LEFT);
+        UI.getChildren().addAll(tableView, cb);
+        return UI;
     }
 }

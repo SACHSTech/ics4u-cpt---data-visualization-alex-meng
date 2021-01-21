@@ -4,6 +4,7 @@ import java.io.*;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import java.util.ArrayList;
 
 public class Country {
     private StringProperty Nation;
@@ -55,6 +56,59 @@ public class Country {
             System.out.println("Not Found");
         }
         csvReader.close();
+    }
+
+    public static void sortPop(ArrayList <Country> Countries){
+        ArrayList<Country> temp = new ArrayList<Country>();
+        sortHelp(Countries, 0, Countries.size() - 1, temp);
+        //return test;
+        System.out.println(Countries);
+    }
+
+    private static void sortHelp(ArrayList <Country> Countries, int from, int to, ArrayList <Country> temp){
+        ArrayList <Country> test = new ArrayList<Country>();
+        if(to - from > 1){
+            int mid = (from + to) / 2;
+            sortHelp(Countries, from, mid, temp);
+            sortHelp(Countries, mid + 1, to, temp);
+
+            mergeT(Countries, from, mid, to, temp);
+            test = Countries;
+        }
+        //return test;
+    }
+
+    private static void mergeT(ArrayList <Country> Countries, int from, int mid, int to, ArrayList <Country> temp){
+        int i = from;
+        int j = mid + 1;
+        int k = from;
+
+        while(i <= mid && j < to){
+            if(Integer.parseInt(Countries.get(i).getPopulation()) < Integer.parseInt(Countries.get(j).getPopulation())){
+               temp.set(k, Countries.get(i));
+               i++;
+           }else{
+               temp.set(k, Countries.get(j));
+               j++;
+           }
+           k++;
+        }
+
+        while(i < mid){
+            temp.set(k, Countries.get(i));
+            i++;
+            k++;
+        }
+
+        while(j < to){
+            temp.set(k, Countries.get(j));
+            j++;
+            k++;
+        }
+
+        for(k = from; k <= to; k++){
+            Countries.set(k, temp.get(k));
+        }
     }
 
     public String toString(){
