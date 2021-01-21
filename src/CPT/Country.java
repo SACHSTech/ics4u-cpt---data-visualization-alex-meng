@@ -58,57 +58,25 @@ public class Country {
         csvReader.close();
     }
 
-    public static void sortPop(ArrayList <Country> Countries){
-        ArrayList<Country> temp = new ArrayList<Country>();
-        sortHelp(Countries, 0, Countries.size() - 1, temp);
-        //return test;
-        System.out.println(Countries);
-    }
+    public static ArrayList sortPop(ArrayList <Country> Countries){
+        int currentMinIndex;
+        int intCount;
+        for(intCount = 0; intCount < Countries.size(); intCount ++){
+            currentMinIndex = intCount;
 
-    private static void sortHelp(ArrayList <Country> Countries, int from, int to, ArrayList <Country> temp){
-        ArrayList <Country> test = new ArrayList<Country>();
-        if(to - from > 1){
-            int mid = (from + to) / 2;
-            sortHelp(Countries, from, mid, temp);
-            sortHelp(Countries, mid + 1, to, temp);
+            for(int j = intCount + 1; j < Countries.size(); j ++){
+                if(Integer.parseInt(Countries.get(j).getPopulation()) > Integer.parseInt(Countries.get(currentMinIndex).getPopulation())){
+                    currentMinIndex = j;
+                }
+            }
 
-            mergeT(Countries, from, mid, to, temp);
-            test = Countries;
+            if(intCount != currentMinIndex){
+                Country temp = Countries.get(currentMinIndex);
+                Countries.set(currentMinIndex, Countries.get(intCount));
+                Countries.set(intCount, temp);
+            }
         }
-        //return test;
-    }
-
-    private static void mergeT(ArrayList <Country> Countries, int from, int mid, int to, ArrayList <Country> temp){
-        int i = from;
-        int j = mid + 1;
-        int k = from;
-
-        while(i <= mid && j < to){
-            if(Integer.parseInt(Countries.get(i).getPopulation()) < Integer.parseInt(Countries.get(j).getPopulation())){
-               temp.set(k, Countries.get(i));
-               i++;
-           }else{
-               temp.set(k, Countries.get(j));
-               j++;
-           }
-           k++;
-        }
-
-        while(i < mid){
-            temp.set(k, Countries.get(i));
-            i++;
-            k++;
-        }
-
-        while(j < to){
-            temp.set(k, Countries.get(j));
-            j++;
-            k++;
-        }
-
-        for(k = from; k <= to; k++){
-            Countries.set(k, temp.get(k));
-        }
+        return Countries;
     }
 
     public String toString(){

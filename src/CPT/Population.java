@@ -52,11 +52,10 @@ public class Population extends Application{
 
         int intCount;
         Country.sortPop(Countries);
-        //int[] arr = {1, 5, 3, 6, 9, 2, 3, 4, 8};
-        //Lists.mergeSort(arr);
-        //for(intCount = 0; intCount < Countries.size(); intCount ++){
-            //System.out.println(Countries.get(intCount));
-        //}
+
+        for(intCount = 0; intCount < Countries.size(); intCount ++){
+            System.out.println(Countries.get(intCount));
+        }
 
        while(!cName.equals("")){
         System.out.println("Print Country Name: ");
