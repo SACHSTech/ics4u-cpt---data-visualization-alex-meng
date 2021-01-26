@@ -30,6 +30,7 @@ public class Country {
         return population.get();
     }
 
+    
     public void setYear(String date) throws IOException{
         BufferedReader csvReader = new BufferedReader(new FileReader("src/CPT/population.csv"));
         
@@ -56,27 +57,6 @@ public class Country {
             System.out.println("Not Found");
         }
         csvReader.close();
-    }
-
-    public static ArrayList sortPop(ArrayList <Country> Countries){
-        int currentMinIndex;
-        int intCount;
-        for(intCount = 0; intCount < Countries.size(); intCount ++){
-            currentMinIndex = intCount;
-
-            for(int j = intCount + 1; j < Countries.size(); j ++){
-                if(Integer.parseInt(Countries.get(j).getPopulation()) > Integer.parseInt(Countries.get(currentMinIndex).getPopulation())){
-                    currentMinIndex = j;
-                }
-            }
-
-            if(intCount != currentMinIndex){
-                Country temp = Countries.get(currentMinIndex);
-                Countries.set(currentMinIndex, Countries.get(intCount));
-                Countries.set(intCount, temp);
-            }
-        }
-        return Countries;
     }
 
     public String toString(){
