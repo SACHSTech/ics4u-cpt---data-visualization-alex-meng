@@ -6,9 +6,11 @@ import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 
 public class Methods{
     private static ArrayList<Country> list;
+    private static HashMap<String, Country> map;
   
     public static ArrayList <Country> getList(){
         return list;
@@ -16,6 +18,14 @@ public class Methods{
 
     public static void setList(ArrayList<Country> newList){
         list = newList;
+    }
+
+    public static void setHMap(HashMap <String, Country> newMap){
+        map = newMap;
+    }
+
+    public static HashMap <String, Country> getHMap(){
+        return map;
     }
 
     // converts arraylist to observable list
