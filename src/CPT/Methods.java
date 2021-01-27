@@ -63,6 +63,20 @@ public class Methods{
         return data;
     }
 
+    // searches for entries matching input year and adds to arraylist
+    public static ArrayList <Country> searchYear(String year){
+        ArrayList<Country> data = new ArrayList <Country> ();
+
+        for(int intCount = 0; intCount < list.size(); intCount ++){
+
+            if(year.equalsIgnoreCase(list.get(intCount).getYear())){
+                data.add(list.get(intCount));
+            }
+        }
+
+        return data;
+    }
+
     // Searches for entries matching input country and adds to observable list
     public static ObservableList <Country> byCountry(String Country){
         ObservableList<Country> data = FXCollections.observableArrayList();

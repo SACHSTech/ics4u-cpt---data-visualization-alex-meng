@@ -37,7 +37,7 @@ public class Population extends Application {
         HashMap<String, Country> Nations = new HashMap<String, Country>();
         ArrayList<Country> Countries = new ArrayList<Country>();
         String cName = " ";
-        String Year;
+        int Year;
         String row;
         String Country;
         String prevC = "";
@@ -62,26 +62,35 @@ public class Population extends Application {
         Methods.setHMap(Nations);
         csvReader.close();
 
+
+
         launch(args);
-        /*
-         * int intCount; Methods.sortPop(Countries);
-         * 
-         * for (intCount = 0; intCount < Countries.size(); intCount++) {
-         * System.out.println(Countries.get(intCount)); }
-         * 
-         * while (!cName.equals("")) { System.out.println("Print Country Name: "); cName
-         * = key.readLine();
-         * 
-         * if (!cName.equals("")) { if (Nations.containsKey(cName) == true) {
-         * System.out.println("Print year:"); Year = key.readLine();
-         * Nations.get(cName).setYear(Year);
-         * 
-         * System.out.println("Country     Year     Population");
-         * System.out.println(Nations.get(cName)); System.out.println(" "); } else {
-         * System.out.println("Error: Country Not Found"); } }
-         * 
-         * }
-         */
+        
+        //Methods.sortPop(Countries);
+          
+        //for (intCount = 0; intCount < Countries.size(); intCount++) {
+            //System.out.println(Countries.get(intCount)); 
+       //}
+          
+        while (!cName.equals("")) { 
+            System.out.println("Print Country Name: "); 
+            cName = key.readLine();
+          
+            if (!cName.equals("")) { 
+                if (Nations.containsKey(cName) == true) {
+                    System.out.println("Print year:"); 
+                    Year = Integer.parseInt(key.readLine());
+                    Nations.get(cName).setYear(String.valueOf(Year));
+          
+                    System.out.println("Country     Year     Population");
+                    System.out.println(Nations.get(cName)); 
+                    System.out.println(" "); 
+                }else{
+                    System.out.println("Error: Country Not Found"); 
+                } 
+            }
+        }
+         
 
     }
 
@@ -96,45 +105,68 @@ public class Population extends Application {
         Label menu = new Label("Main Menu");
 
         Button viewAll = new Button("View All Entries");
+        viewAll.setOnAction(e -> primaryStage.setScene(new Scene(createTable(Methods.All(), primaryStage), 350, 450)));
 
         TextField searchYear = new TextField("Year");
         searchYear.setMaxSize(140, TextField.USE_COMPUTED_SIZE);
+        searchYear.setOnAction(e -> primaryStage.setScene(new Scene(byYear(searchYear.getText(), primaryStage), 350, 450)));
 
         TextField searchCountry = new TextField("Country");
         searchCountry.setMaxSize(140, TextField.USE_COMPUTED_SIZE);
+        searchCountry.setOnAction(e -> primaryStage.setScene(new Scene(byCountry(searchCountry.getText(), primaryStage), 350, 450)));
 
         Button barSettings = new Button("Create Barchart");
-
-        viewAll.setOnAction(e -> primaryStage.setScene(new Scene(createTable(Methods.All()), 350, 450)));
-        searchYear.setOnAction(e -> primaryStage.setScene(new Scene(byYear(searchYear.getText()), 350, 450)));
-        searchCountry.setOnAction(e -> primaryStage.setScene(new Scene(byCountry(searchCountry.getText()), 350, 450)));
         barSettings.setOnAction(e -> primaryStage.setScene(new Scene(barSettings(primaryStage))));
 
+        TextField searchEntry = new TextField("Search Entry(Country Year)");
+        searchEntry.setMaxSize(140, TextField.USE_COMPUTED_SIZE);
+        searchEntry.setOnAction(e -> primaryStage.setScene(new Scene(searchEntry(searchEntry.getText(), primaryStage), 350, 450)));
+
+        Label sorting = new Label("Sort By:");
+        Button sort = new Button("Sort");
+
+        sort.setOnAction(e -> primaryStage.setScene(new Scene(createTable(Methods.toOb(Methods.sortPop(Methods.searchYear(searchYear.getText()))), primaryStage), 350, 450)));
+
         VBox main = new VBox();
-        main.getChildren().addAll(menu, viewAll, searchYear, searchCountry, barSettings);
+        main.getChildren().addAll(menu, viewAll, searchCountry, searchEntry, barSettings, sorting, searchYear, sort);
         main.setAlignment(Pos.TOP_CENTER);
 
         return main;
     }
 
-    //
-    public Parent byYear(String year) {
+    public Parent searchEntry(String input, Stage primaryStage){
+        String[] data = input.split(" ");
+
+        Country C = Methods.getHMap().get(data[0]);
+        C.setYear(data[1]);
+        Label entry = new Label(C.toString());
+
+        Button back = new Button("Back");
+        back.setOnAction(e -> primaryStage.setScene(new Scene(mainMenu(primaryStage), 300, 250)));
+
+        VBox box = new VBox();
+        box.getChildren().addAll(entry, back);
+        box.setAlignment(Pos.TOP_CENTER);
+
+        return box;
+    }
+    
+    public Parent byYear(String year, Stage primaryStage) {
         ObservableList<Country> data = Methods.byYear(year);
-        Parent table = createTable(data);
+        Parent table = createTable(data, primaryStage);
 
         return table;
     }
 
-    public Parent byCountry(String country) {
+    public Parent byCountry(String country, Stage primaryStage) {
         ObservableList<Country> data = Methods.byCountry(country);
-        Parent table = createTable(data);
+        Parent table = createTable(data, primaryStage);
 
         return table;
     }
 
-    public Parent createBar(String dateStart, String dateEnd, Country Country1, Country Country2, Country Country3) {
+    public Parent createBar(String dateStart, String dateEnd, Country Country1, Country Country2, Country Country3, Stage primaryStage) {
         ArrayList<String> years = new ArrayList<String>();
-        ArrayList<Country> Countries = new ArrayList<Country>();
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Population");
@@ -146,43 +178,49 @@ public class Population extends Application {
         }
         years.add(String.valueOf(intCount));
 
-        Countries.add(Country1);
-        Countries.add(Country2);
-        Countries.add(Country3);
-
         xAxis.setCategories(Methods.toOb(years));
 
         XYChart.Series C1 = new XYChart.Series();
-        C1.setName(Countries.get(0).getNation());
+        C1.setName(Country1.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
-            Countries.get(0).setYear(years.get(intCount));
-            C1.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Countries.get(0).getPopulation())));
+            Country1.setYear(years.get(intCount));
+            C1.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Country1.getPopulation())));
         }
 
         chart.getData().add(C1);
 
         XYChart.Series C2 = new XYChart.Series();
-        C2.setName(Countries.get(1).getNation());
+        C2.setName(Country2.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
-            Countries.get(1).setYear(years.get(intCount));
-            C2.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Countries.get(1).getPopulation())));
+            Country2.setYear(years.get(intCount));
+            C2.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Country2.getPopulation())));
         }
 
         chart.getData().add(C2);
 
         XYChart.Series C3 = new XYChart.Series();
-        C3.setName(Countries.get(2).getNation());
+        C3.setName(Country3.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
-            Countries.get(2).setYear(years.get(intCount));
-            C3.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Countries.get(2).getPopulation())));
+            Country3.setYear(years.get(intCount));
+            C3.getData().add(new XYChart.Data(years.get(intCount), Long.parseLong(Country3.getPopulation())));
         }
 
         chart.getData().add(C3);
 
-        return chart;
+        Button back = new Button("Back to Menu");
+        back.setOnAction(e -> primaryStage.setScene(new Scene(mainMenu(primaryStage), 300, 250)));
+
+        Button Settings = new Button("Settings");
+        Settings.setOnAction(e -> primaryStage.setScene(new Scene(barSettings(primaryStage), 300, 250)));
+
+        VBox box = new VBox();
+
+        box.getChildren().addAll(chart, back, Settings);
+
+        return box;
     }
 
     public Parent barSettings(Stage primaryStage){
@@ -201,6 +239,7 @@ public class Population extends Application {
         for (int intCount = 0; intCount < list.size(); intCount++) {
             C = list.get(intCount);
             Country = C.getNation();
+            C = Methods.getHMap().get(Country);
             if (!Country.equals(prevC)) {
                 C1.getItems().add(C);
                 C2.getItems().add(C);
@@ -209,7 +248,7 @@ public class Population extends Application {
             prevC = Country;
         }
 
-        create.setOnAction(e -> primaryStage.setScene(new Scene(createBar(startY.getText(), endY.getText(), C1.getValue(), C2.getValue(), C3.getValue()))));
+        create.setOnAction(e -> primaryStage.setScene(new Scene(createBar(startY.getText(), endY.getText(), C1.getValue(), C2.getValue(), C3.getValue(), primaryStage))));
 
         layout.getChildren().addAll(C1, C2, C3, startY, endY, create);
         layout.setAlignment(Pos.CENTER_LEFT);
@@ -217,7 +256,7 @@ public class Population extends Application {
         return layout;
     }
 
-    public Parent createTable(ObservableList <Country> data){
+    public Parent createTable(ObservableList <Country> data, Stage primaryStage){
 
         TableColumn Nation = new TableColumn();
         Nation.setText("Country");
@@ -235,6 +274,12 @@ public class Population extends Application {
         tableView.setItems(data);
         tableView.getColumns().addAll(Nation, Year, Population);
 
-        return tableView;
+        Button back = new Button("Back to Menu");
+        back.setOnAction(e -> primaryStage.setScene(new Scene(mainMenu(primaryStage), 300, 250)));
+
+        VBox box = new VBox();
+        box.getChildren().addAll(tableView, back);
+
+        return box;
     }
 }
