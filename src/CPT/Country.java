@@ -15,14 +15,14 @@ import java.util.HashMap;
  * 
  */
 public class Country {
-    private StringProperty Nation;
+    private StringProperty nation;
     private StringProperty year;
     private StringProperty population;
     private HashMap <String, String> yearPop = new HashMap<String, String>();
 
     // Constructor
     public Country(String country, String date, String Population){
-        this.Nation = new SimpleStringProperty(country);
+        this.nation = new SimpleStringProperty(country);
         this.year = new SimpleStringProperty(date);
         this.population = new SimpleStringProperty(Population);
     }
@@ -40,7 +40,7 @@ public class Country {
     }
 
     public String getNation(){
-        return Nation.get();
+        return nation.get();
     }
 
     public String getYear(){
@@ -62,6 +62,7 @@ public class Country {
         if(yearPop.containsKey(date) == true){
             year = new SimpleStringProperty(date);
             population = new SimpleStringProperty(yearPop.get(date));
+
         }else if(yearPop.containsKey(date) == false){
             System.out.println("Not Found");
         }
@@ -69,6 +70,6 @@ public class Country {
     }
 
     public String toString(){
-        return Nation.get() + "     " + year.get() + "     " + population.get();
+        return nation.get() + "     " + year.get() + "     " + population.get();
     }
 }

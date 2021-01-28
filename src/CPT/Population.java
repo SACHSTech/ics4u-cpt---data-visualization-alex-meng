@@ -24,27 +24,27 @@ public class Population extends Application {
         HashMap<String, Country> Nations = new HashMap<String, Country>();
         ArrayList<Country> Countries = new ArrayList<Country>();
         String row;
-        String Country;
+        String country;
         String prevC = "";
 
         csvReader.readLine();
 
         while ((row = csvReader.readLine()) != null) {
             String data[] = row.split(",");
-            Country = data[0];
+            country = data[0];
 
             Countries.add(new Country(data[0], data[2], data[3]));
 
-            if (!Country.equals(prevC)) {
+            if (!country.equals(prevC)) {
                 Nations.put(data[0], new Country(data[0], data[2], data[3]));
 
             }
 
-            if (Country.equals(prevC)) {
-                Nations.get(Country).addYearPop(data[2], data[3]);
+            if (country.equals(prevC)) {
+                Nations.get(country).addYearPop(data[2], data[3]);
             }
 
-            prevC = Country;
+            prevC = country;
         }
 
         Methods.setList(Countries);

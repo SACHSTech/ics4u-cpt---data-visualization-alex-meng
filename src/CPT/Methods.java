@@ -53,15 +53,15 @@ public class Methods{
     /**
      * toOb
      * Converts ArrayList to ObservableList
-     * @param List
+     * @param inList
      * @return ObservableList data
      */
-    public static ObservableList toOb(ArrayList List) {
+    public static ObservableList toOb(ArrayList inList) {
         ObservableList data = FXCollections.observableArrayList();
         int intCount;
 
-        for (intCount = 0; intCount < List.size(); intCount ++) {
-            data.add(List.get(intCount));
+        for (intCount = 0; intCount < inList.size(); intCount ++) {
+            data.add(inList.get(intCount));
         }
 
         return data;
@@ -111,12 +111,12 @@ public class Methods{
      * @return ObservableList of entries matching input country name
      * 
      */
-    public static ObservableList <Country> byCountry(String Country) {
+    public static ObservableList <Country> byCountry(String country) {
         ObservableList<Country> data = FXCollections.observableArrayList();
 
         for (int intCount = 0; intCount < list.size(); intCount ++) {
 
-            if (Country.equalsIgnoreCase(list.get(intCount).getNation())) {
+            if (country.equalsIgnoreCase(list.get(intCount).getNation())) {
                 data.add(list.get(intCount));
             }
 
@@ -127,15 +127,15 @@ public class Methods{
 
     /**
      * listByCountry
-     * @param Country
+     * @param country
      * @return ArrayList of entries matching String Country
      */
-    public static ArrayList <Country> listByCountry(String Country) {
+    public static ArrayList <Country> listByCountry(String country) {
         ArrayList <Country> data = new ArrayList<Country>();
 
         for (int intCount = 0; intCount < list.size(); intCount ++) {
 
-            if (Country.equalsIgnoreCase(list.get(intCount).getNation())) {
+            if (country.equalsIgnoreCase(list.get(intCount).getNation())) {
                 data.add(list.get(intCount));
             }
 
@@ -151,24 +151,24 @@ public class Methods{
      * excludes World and Continents
      */
     public static Integer avgByYear(String year) {
-        ArrayList <Country> Countries = searchYear(year);
+        ArrayList <Country> countries = searchYear(year);
         double total = 0;
         double avg;
         Country c;
         int average;
         String nation;
 
-        for (int intCount = 0; intCount < Countries.size(); intCount ++) {
-            c = Countries.get(intCount);
+        for (int intCount = 0; intCount < countries.size(); intCount ++) {
+            c = countries.get(intCount);
             nation = c.getNation();
 
             if (!nation.equals("World") && !nation.equals("Asia") && !nation.equals("Europe") && !nation.equals("Africa") && !nation.equals("North America") && !nation.equals("Latin America")) {
-                total = total + Double.parseDouble(Countries.get(intCount).getPopulation());
+                total = total + Double.parseDouble(countries.get(intCount).getPopulation());
             }
 
         }
 
-        avg = total / Countries.size();
+        avg = total / countries.size();
         average = (int) Math.round(avg);
 
         return average;
@@ -184,14 +184,14 @@ public class Methods{
      */
     public static double popDensity(String year) {
         final int landArea = 148900000;
-        ArrayList <Country> Countries = searchYear(year);
+        ArrayList <Country> countries = searchYear(year);
         double total = 0;
         double density;
         Country c;
         String nation;
 
-        for (int intCount = 0; intCount < Countries.size(); intCount ++) {
-            c = Countries.get(intCount);
+        for (int intCount = 0; intCount < countries.size(); intCount ++) {
+            c = countries.get(intCount);
             nation = c.getNation();
 
             if (nation.equals("World")) {
@@ -233,7 +233,8 @@ public class Methods{
             divide(mid + 1, endIndex);        
             
             merger(startIndex,mid,endIndex);            
-        }       
+        }
+               
     }   
     
     private static void merger(int startIndex,int midIndex,int endIndex) {
