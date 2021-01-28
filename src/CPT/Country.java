@@ -28,6 +28,10 @@ public class Country {
         return yearPop.get(y);
     }
 
+    public HashMap<String, String> getYPList(){
+        return yearPop;
+    }
+
     public String getNation(){
         return Nation.get();
     }

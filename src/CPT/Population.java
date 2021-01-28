@@ -3,6 +3,7 @@ package CPT;
 import java.io.*;
 import CPT.Country;
 import CPT.Methods;
+import CPT.Charts;
 
 import javafx.scene.Scene;
 import javafx.scene.chart.BarChart;
@@ -10,12 +11,10 @@ import javafx.scene.chart.CategoryAxis;
 import javafx.scene.chart.NumberAxis;
 import javafx.scene.chart.XYChart;
 import javafx.application.Application;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import javafx.stage.Stage;
 import javafx.collections.FXCollections;
-//import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Parent;
 import javafx.scene.control.TableColumn;
@@ -24,10 +23,10 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.VBox;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
-//import javafx.scene.control.ChoiceBox;
 import javafx.geometry.Pos;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.chart.LineChart;
 
 public class Population extends Application {
 
@@ -97,10 +96,12 @@ public class Population extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(mainMenu(primaryStage), 300, 250));
+        primaryStage.setScene(new Scene(Charts.mainMenu(primaryStage), 300, 250));
         primaryStage.setTitle("World Populations");
         primaryStage.show();
     }
+
+    /**
 
     public Parent mainMenu(Stage primaryStage) {
         Label menu = new Label("Main Menu");
@@ -283,4 +284,5 @@ public class Population extends Application {
 
         return box;
     }
+    */
 }

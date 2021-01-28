@@ -3,6 +3,8 @@ package CPT;
 import CPT.Country;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,27 +115,69 @@ public class Methods{
     }
 
     /**
+     * 
+     * @param Country
+     * @return ArrayList of entries matching String Country
+     */
+    public static ArrayList <Country> listByCountry(String Country){
+        ArrayList <Country> data = new ArrayList<Country>();
+
+        for(int intCount = 0; intCount < list.size(); intCount ++){
+
+            if(Country.equalsIgnoreCase(list.get(intCount).getNation())){
+                data.add(list.get(intCount));
+            }
+        }
+
+        return data;
+    }
+
+    /**
      * avgByYear
      * @param year
      * @return average population by year
      * excludes World and Continents
      */
-    public static double avgByYear(String year){
+    public static Integer avgByYear(String year){
         ArrayList <Country> Countries = searchYear(year);
         double total = 0;
         double avg;
         Country c;
+        int average;
+        String nation;
 
         for(int intCount = 0; intCount < Countries.size(); intCount ++){
             c = Countries.get(intCount);
-            if(!c.getNation().equals("World") && !c.getNation().equals("Asia") && !c.getNation().equals("Europe") && !c.getNation().equals("Africa") && !c.getNation().equals("North America") && !c.getNation().equals("Latin America")){
+            nation = c.getNation();
+            if(!nation.equals("World") && !nation.equals("Asia") && !nation.equals("Europe") && !nation.equals("Africa") && !nation.equals("North America") && !nation.equals("Latin America")){
                 total = total + Double.parseDouble(Countries.get(intCount).getPopulation());
             }
         }
 
         avg = total / Countries.size();
+        average = (int) Math.round(avg);
 
-        return avg;
+        return average;
+    }
+
+    public static int popDensity(String year){
+        ArrayList <Country> Countries = searchYear(year);
+        int total = 0;
+        int density;
+        Country c;
+        String nation;
+        final int landArea = 148900000;
+
+        for(int intCount = 0; intCount < Countries.size(); intCount ++){
+            c = Countries.get(intCount);
+            nation = c.getNation();
+            if(!nation.equals("World") && !nation.equals("Asia") && !nation.equals("Europe") && !nation.equals("Africa") && !nation.equals("North America") && !nation.equals("Latin America")){
+                total = total + Integer.parseInt(Countries.get(intCount).getPopulation());
+            }
+        }
+
+        density = total / landArea;
+        return density;
     }
 
     // Merge Sort stuff
