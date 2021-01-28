@@ -26,3 +26,7 @@ Country,Code,Year,Total Population
 ## Why This Data Set:
 I selected this data set because I felt it was just right for this project. The data wasn't anything too complex, but it wasn't too simple either. I also find population growth interesting, seeing how we started from such a small population, to one so large. Did you know, since 1999, the world population has gone up by
 1.6 billion people? I found that out while testing my code. It's pretty crazy.
+
+### Videos:
+Demo: (https://drive.google.com/file/d/13P3y32D41EAVvcq95nOAY1h5YwrWiDpK/view?usp=sharing)
+Course Connections: (https://drive.google.com/file/d/1Z5hpVHU6IrwZRGfCo2wEXbVtEXUYtkgA/view?usp=sharing)

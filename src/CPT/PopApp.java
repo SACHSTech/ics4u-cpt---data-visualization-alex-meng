@@ -61,7 +61,7 @@ public class PopApp {
         searchEntry.setOnAction(
                 e -> primaryStage.setScene(new Scene(searchEntry(searchEntry.getText(), primaryStage), 350, 450)));
 
-        Label sorting = new Label("Sort By:");
+        Label sorting = new Label("Sort: ");
         Button sort = new Button("Sort");
 
         sort.setOnAction(e -> primaryStage.setScene(new Scene(
