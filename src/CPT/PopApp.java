@@ -1,7 +1,6 @@
 package CPT;
 
 import java.util.ArrayList;
-
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Parent;
@@ -22,8 +21,22 @@ import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import javafx.scene.chart.LineChart;
 
-public class Charts {
+/**
+ * PopApp.java
+ * Contains all of the javafx UIs
+ * Each page has a back to menu button(except for the main menu)
+ * Makes all the charts and tables for the app
+ */
 
+public class PopApp {
+
+    /**
+     * mainMenu
+     * The first page on start-up
+     * Allows access to all other pages
+     * @param primaryStage
+     * @return Main Menu Page
+     */
     public static Parent mainMenu(Stage primaryStage) {
         Label menu = new Label("Main Menu");
 
@@ -59,15 +72,28 @@ public class Charts {
         lineSettings.setOnAction(e -> primaryStage.setScene(new Scene(lineSettings(primaryStage), 300, 250)));
 
         Button summary = new Button("Summary");
-        summary.setOnAction(e -> primaryStage.setScene(new Scene(summary(primaryStage), 300, 250)));
+        summary.setOnAction(e -> primaryStage.setScene(new Scene(summary(primaryStage), 450, 250)));
+
+        HBox line = new HBox();
+        line.getChildren().addAll(barSettings, lineSettings);
+        line.setAlignment(Pos.CENTER);
 
         VBox main = new VBox();
-        main.getChildren().addAll(menu, viewAll, searchCountry, searchEntry, sorting, searchYear, sort, barSettings, lineSettings, summary);
+        main.getChildren().addAll(menu, viewAll, searchCountry, searchEntry, sorting, searchYear, sort, line, summary);
         main.setAlignment(Pos.TOP_CENTER);
 
         return main;
     }
 
+    /**
+     * searchEntry
+     * Takes input in the format "Country Year"
+     * Displays specific entry
+     * Has a back button
+     * @param input
+     * @param primaryStage
+     * @return entry
+     */
     public static Parent searchEntry(String input, Stage primaryStage) {
         String[] data = input.split(" ");
 
@@ -85,6 +111,14 @@ public class Charts {
         return box;
     }
 
+    /**
+     * byYear
+     * Displays a table of entries matching input year
+     * Sorted by alphabetical order(default because of data set)
+     * @param year
+     * @param primaryStage
+     * @return table
+     */
     public static Parent byYear(String year, Stage primaryStage) {
         ObservableList<Country> data = Methods.byYear(year);
         Parent table = createTable(data, primaryStage);
@@ -92,6 +126,14 @@ public class Charts {
         return table;
     }
 
+    /**
+     * byCountry
+     * Displays a table of entries matching input country
+     * Sorted by earliest entry to latest(default because of data set)
+     * @param country
+     * @param primaryStage
+     * @return table
+     */
     public static Parent byCountry(String country, Stage primaryStage) {
         ObservableList<Country> data = Methods.byCountry(country);
         Parent table = createTable(data, primaryStage);
@@ -99,15 +141,22 @@ public class Charts {
         return table;
     }
 
+    /**
+     * barSettings
+     * Settings menu for barchart
+     * Create button sends data to createBar
+     * @param primaryStage
+     * @return layout
+     */
     public static Parent barSettings(Stage primaryStage) {
         VBox layout = new VBox();
         ArrayList<Country> list = Methods.getList();
         String Country;
         String prevC = "";
         Country C;
-        ChoiceBox<Country> C1 = new ChoiceBox<Country>();
-        ChoiceBox<Country> C2 = new ChoiceBox<Country>();
-        ChoiceBox<Country> C3 = new ChoiceBox<Country>();
+        ChoiceBox<Country> C1 = new ChoiceBox <Country>();
+        ChoiceBox<Country> C2 = new ChoiceBox <Country>();
+        ChoiceBox<Country> C3 = new ChoiceBox <Country>();
         TextField startY = new TextField("Start Year");
         TextField endY = new TextField("End Year");
         Button create = new Button("Create!");
@@ -116,11 +165,13 @@ public class Charts {
             C = list.get(intCount);
             Country = C.getNation();
             C = Methods.getHMap().get(Country);
+
             if (!Country.equals(prevC)) {
                 C1.getItems().add(C);
                 C2.getItems().add(C);
                 C3.getItems().add(C);
             }
+
             prevC = Country;
         }
 
@@ -136,23 +187,37 @@ public class Charts {
         return layout;
     }
 
+    /**
+     * createBar
+     * Gets input from barSettings
+     * Has a back to settings button
+     * Creates and displays BarChart given:
+     * @param dateStart
+     * @param dateEnd
+     * @param Country1
+     * @param Country2
+     * @param Country3
+     * @param primaryStage
+     * @return barChart
+     */
     public static Parent createBar(String dateStart, String dateEnd, Country Country1, Country Country2,
             Country Country3, Stage primaryStage) {
         ArrayList<String> years = new ArrayList<String>();
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
         yAxis.setLabel("Population");
-        BarChart chart = new BarChart(xAxis, yAxis);
+        BarChart <CategoryAxis, NumberAxis> chart = new BarChart(xAxis, yAxis);
         int intCount;
 
         for (intCount = Integer.parseInt(dateStart); intCount < Integer.parseInt(dateEnd); intCount++) {
             years.add(String.valueOf(intCount));
         }
+
         years.add(String.valueOf(intCount));
 
         xAxis.setCategories(Methods.toOb(years));
 
-        XYChart.Series C1 = new XYChart.Series();
+        XYChart.Series C1 = new XYChart.Series<>();
         C1.setName(Country1.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
@@ -162,7 +227,7 @@ public class Charts {
 
         chart.getData().add(C1);
 
-        XYChart.Series C2 = new XYChart.Series();
+        XYChart.Series C2 = new XYChart.Series<>();
         C2.setName(Country2.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
@@ -172,7 +237,7 @@ public class Charts {
 
         chart.getData().add(C2);
 
-        XYChart.Series C3 = new XYChart.Series();
+        XYChart.Series C3 = new XYChart.Series<>();
         C3.setName(Country3.getNation());
 
         for (intCount = 0; intCount < years.size(); intCount++) {
@@ -195,19 +260,26 @@ public class Charts {
         return box;
     }
 
+    /**
+     * createTable
+     * Creates and displays a table given an observable list of data
+     * @param data
+     * @param primaryStage
+     * @return table
+     */
     public static Parent createTable(ObservableList<Country> data, Stage primaryStage) {
 
-        TableColumn Nation = new TableColumn();
+        TableColumn <String, String> Nation = new TableColumn <String, String>();
         Nation.setText("Country");
-        Nation.setCellValueFactory(new PropertyValueFactory("Nation"));
+        Nation.setCellValueFactory(new PropertyValueFactory <String, String> ("Nation"));
 
-        TableColumn Year = new TableColumn();
+        TableColumn <String, String> Year = new TableColumn <String, String>();
         Year.setText("Year");
-        Year.setCellValueFactory(new PropertyValueFactory("year"));
+        Year.setCellValueFactory(new PropertyValueFactory <String, String> ("year"));
 
-        TableColumn Population = new TableColumn();
+        TableColumn <String, String> Population = new TableColumn <String, String>();
         Population.setText("Population");
-        Population.setCellValueFactory(new PropertyValueFactory("population"));
+        Population.setCellValueFactory(new PropertyValueFactory <String, String> ("population"));
 
         final TableView tableView = new TableView();
         tableView.setItems(data);
@@ -222,6 +294,15 @@ public class Charts {
         return box;
     }
 
+    /**
+     * lineChart
+     * Creates and displays line chart given a country from lineSettings
+     * Displays population changes from earliest to latest entry
+     * Has a back to settings button
+     * @param Country
+     * @param primaryStage
+     * @return lineChart
+     */
     public static Parent lineChart(String Country, Stage primaryStage) {
         CategoryAxis xAxis = new CategoryAxis();
         NumberAxis yAxis = new NumberAxis();
@@ -233,9 +314,10 @@ public class Charts {
         xAxis.setLabel("Year");
         yAxis.setLabel("Population");
 
-        XYChart.Series<String, Long> data = new XYChart.Series<String, Long>();
+        XYChart.Series <String, Long> data = new XYChart.Series <String, Long>();
+        data.setName(Country);
 
-        for(int intCount = 0; intCount < cData.size(); intCount ++){
+        for (int intCount = 0; intCount < cData.size(); intCount ++) {
             C = cData.get(intCount);
             data.getData().add(new XYChart.Data <String, Long> (C.getYear(), Long.parseLong(C.getPopulation())));
         }
@@ -254,7 +336,14 @@ public class Charts {
         return box;
     }
 
-    public static Parent lineSettings(Stage primaryStage){
+    /**
+     * lineSettings
+     * Settings menu for lineChart
+     * Create button sends data(One Country) to lineChart
+     * @param primaryStage
+     * @return layout
+     */
+    public static Parent lineSettings(Stage primaryStage) {
         TextField Country = new TextField("Country");
         Button create = new Button("Create!");
         Button back = new Button("Back");
@@ -264,23 +353,32 @@ public class Charts {
 
         create.setOnAction(e -> primaryStage.setScene(new Scene(lineChart(Country.getText(), primaryStage))));
 
-        VBox box = new VBox();
-        box.getChildren().addAll(Country, create, back);
-        box.setAlignment(Pos.TOP_CENTER);
+        VBox layout = new VBox();
+        layout.getChildren().addAll(Country, create, back);
+        layout.setAlignment(Pos.TOP_CENTER);
 
-        return box;
+        return layout;
     }
 
-    public static Parent summary(Stage primaryStage){
+    /**
+     * summary
+     * A displays a page summarizing the data set
+     * @param primaryStage
+     * @return box(summary)
+     */
+    public static Parent summary(Stage primaryStage) {
         TextField year = new TextField("Year");
         Label avg = new Label("Average Population/Country By Year: ");
         Label pDense = new Label("Average Population Density By Year: ");
         Button find = new Button("Calculate Population");
         Button density = new Button("Calculate Density");
         Label countries = new Label("Countries: 242");
+        Label entries = new Label("Entries: 46,883");
+        Label other = new Label("Including Continents and the World");
+        Label date = new Label("Data Last Updated: 2019");
         
         find.setOnAction(e -> avg.setText("Average Population/Country By Year: " + Methods.avgByYear(year.getText())));
-        density.setOnAction(e -> pDense.setText("Average Population Density By Year: " + Methods.popDensity(year.getText()) + "/km\u00B2"));
+        density.setOnAction(e -> pDense.setText("Average Population Density By Year: " + Methods.popDensity(year.getText()) + " people/km\u00B2"));
         year.setMaxSize(140, TextField.USE_COMPUTED_SIZE);
 
         Button back = new Button("Back");
@@ -290,7 +388,7 @@ public class Charts {
         line.getChildren().addAll(find, density);
 
         VBox box = new VBox();
-        box.getChildren().addAll(avg, pDense, year, line, back);
+        box.getChildren().addAll(avg, pDense, year, line, countries, entries, other, date, back);
 
         return box;
     }

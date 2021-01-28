@@ -4,16 +4,23 @@ import java.io.*;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
-import java.util.ArrayList;
 import java.util.HashMap;
 
+/**
+ * Country.java
+ * Country Object
+ * Stores country name, year, and population
+ * Has a HashMap called yearPop that stores
+ * all the years and corresponding population sizes for that country
+ * 
+ */
 public class Country {
     private StringProperty Nation;
     private StringProperty year;
     private StringProperty population;
     private HashMap <String, String> yearPop = new HashMap<String, String>();
 
-
+    // Constructor
     public Country(String country, String date, String Population){
         this.Nation = new SimpleStringProperty(country);
         this.year = new SimpleStringProperty(date);
@@ -44,7 +51,12 @@ public class Country {
         return population.get();
     }
 
-    
+    /**
+     * setYear
+     * Changes the current year and population of the country
+     * If the year isn't found, prints out "Not Found"
+     * @param date
+     */
     public void setYear(String date){
         
         if(yearPop.containsKey(date) == true){
