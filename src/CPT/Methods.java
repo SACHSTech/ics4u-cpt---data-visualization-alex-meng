@@ -5,12 +5,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 
 public class Methods{
     private static ArrayList<Country> list;
     private static HashMap<String, Country> map;
+    private static ArrayList <Country> inputArray;
   
     public static ArrayList <Country> getList(){
         return list;
@@ -28,7 +28,10 @@ public class Methods{
         return map;
     }
 
-    // converts arraylist to observable list
+    /**
+     * 
+     * @return observableList of data set
+     */
     public static ObservableList <Country> All(){
         ObservableList<Country> data = FXCollections.observableArrayList();
         int intCount;
@@ -39,6 +42,11 @@ public class Methods{
         return data;
     }
 
+    /**
+     * Converts ArrayList to ObservableList
+     * @param List
+     * @return ObservableList data
+     */
     public static ObservableList toOb(ArrayList List){
         ObservableList data = FXCollections.observableArrayList();
         int intCount;
@@ -49,7 +57,11 @@ public class Methods{
         return data;
     }
 
-    // searches for entries matching input year and adds to observable list
+    /**
+     * 
+     * @param year
+     * @return ObservableList of Countries matching input year
+     */
     public static ObservableList <Country> byYear(String year){
         ObservableList<Country> data = FXCollections.observableArrayList();
 
@@ -63,7 +75,11 @@ public class Methods{
         return data;
     }
 
-    // searches for entries matching input year and adds to arraylist
+    /**
+     * 
+     * @param year
+     * @return ArrayList of Entries matching input year
+     */
     public static ArrayList <Country> searchYear(String year){
         ArrayList<Country> data = new ArrayList <Country> ();
 
@@ -77,7 +93,12 @@ public class Methods{
         return data;
     }
 
-    // Searches for entries matching input country and adds to observable list
+    /**
+     * 
+     * @param Country
+     * @return ObservableList of entries matching input country name
+     * 
+     */
     public static ObservableList <Country> byCountry(String Country){
         ObservableList<Country> data = FXCollections.observableArrayList();
 
@@ -91,45 +112,95 @@ public class Methods{
         return data;
     }
 
+    /**
+     * avgByYear
+     * @param year
+     * @return average population by year
+     * excludes World and Continents
+     */
     public static double avgByYear(String year){
-        ObservableList <Country> List = byYear(year);
-        int size = List.size();
+        ArrayList <Country> Countries = searchYear(year);
         double total = 0;
         double avg;
+        Country c;
 
-        for(int intCount = 0; intCount < size; intCount ++){
-            if(!List.get(intCount).getNation().equals("World")){
-                total = total + Double.parseDouble(List.get(intCount).getPopulation());
+        for(int intCount = 0; intCount < Countries.size(); intCount ++){
+            c = Countries.get(intCount);
+            if(!c.getNation().equals("World") && !c.getNation().equals("Asia") && !c.getNation().equals("Europe") && !c.getNation().equals("Africa") && !c.getNation().equals("North America") && !c.getNation().equals("Latin America")){
+                total = total + Double.parseDouble(Countries.get(intCount).getPopulation());
             }
         }
 
-        avg = total / size;
+        avg = total / Countries.size();
 
         return avg;
     }
 
-    // Sort by population size
-    public static ArrayList <Country> sortPop(ArrayList <Country> Countries){
-        int currentMinIndex;
-        int intCount;
-        for(intCount = 0; intCount < Countries.size(); intCount ++){
-            currentMinIndex = intCount;
+    // Merge Sort stuff
+    public ArrayList getSortedArray(){
+        return inputArray;
+    }
 
-            for(int j = intCount + 1; j < Countries.size(); j ++){
-                double curMin = Double.parseDouble(Countries.get(currentMinIndex).getPopulation());
-                double curNum = Double.parseDouble(Countries.get(j).getPopulation());
-                if(curNum > curMin){
-                    currentMinIndex = j;
-                }
-            }
+    public static void setMSortArray(ArrayList<Country> input){
+        inputArray = input;
+    }
+    
+    /**
+     * mergeSort:
+     * @param input
+     * @return Sorted Array by population
+     */
+    public static ArrayList mergeSort(ArrayList<Country> input){
+        setMSortArray(input);
+        divide(0, inputArray.size()-1);
+        return inputArray;
+    }
+    
+    public static void divide(int startIndex,int endIndex){
 
-            if(intCount != currentMinIndex){
-                Country temp = Countries.get(currentMinIndex);
-                Countries.set(currentMinIndex, Countries.get(intCount));
-                Countries.set(intCount, temp);
+        if(startIndex<endIndex && (endIndex-startIndex)>=1){
+            int mid = (endIndex + startIndex)/2;
+            divide(startIndex, mid);
+            divide(mid+1, endIndex);        
+            
+            merger(startIndex,mid,endIndex);            
+        }       
+    }   
+    
+    public static void merger(int startIndex,int midIndex,int endIndex){
+
+        ArrayList<Country> mergedSortedArray = new ArrayList<Country>();
+        
+        int leftIndex = startIndex;
+        int rightIndex = midIndex+1;
+        
+        while(leftIndex<=midIndex && rightIndex<=endIndex){
+            if(Long.parseLong(inputArray.get(leftIndex).getPopulation()) <= Long.parseLong(inputArray.get(rightIndex).getPopulation())){
+                mergedSortedArray.add(inputArray.get(rightIndex));
+                rightIndex++;
+            }else{
+                mergedSortedArray.add(inputArray.get(leftIndex));
+                leftIndex++;
             }
+        }       
+        
+        while(leftIndex<=midIndex){
+            mergedSortedArray.add(inputArray.get(leftIndex));
+            leftIndex++;
         }
-        return Countries;
+        
+        while(rightIndex<=endIndex){
+            mergedSortedArray.add(inputArray.get(rightIndex));
+            rightIndex++;
+        }
+        
+        int i = 0;
+        int j = startIndex;
+
+        while(i < mergedSortedArray.size()){
+            inputArray.set(j, mergedSortedArray.get(i++));
+            j++;
+        }
     }
     
 }

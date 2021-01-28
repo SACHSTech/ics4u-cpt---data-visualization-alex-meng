@@ -66,11 +66,12 @@ public class Population extends Application {
 
         launch(args);
         
-        //Methods.sortPop(Countries);
+        //Methods.setMSortArray(Countries);
+        //Methods.mergeSort();
           
         //for (intCount = 0; intCount < Countries.size(); intCount++) {
             //System.out.println(Countries.get(intCount)); 
-       //}
+        //}
           
         while (!cName.equals("")) { 
             System.out.println("Print Country Name: "); 
@@ -125,7 +126,7 @@ public class Population extends Application {
         Label sorting = new Label("Sort By:");
         Button sort = new Button("Sort");
 
-        sort.setOnAction(e -> primaryStage.setScene(new Scene(createTable(Methods.toOb(Methods.sortPop(Methods.searchYear(searchYear.getText()))), primaryStage), 350, 450)));
+        sort.setOnAction(e -> primaryStage.setScene(new Scene(createTable(Methods.toOb(Methods.mergeSort(Methods.searchYear(searchYear.getText()))), primaryStage), 350, 450)));
 
         VBox main = new VBox();
         main.getChildren().addAll(menu, viewAll, searchCountry, searchEntry, barSettings, sorting, searchYear, sort);
