@@ -17,12 +17,12 @@ public class HelloWorld extends Application {
     public void start(Stage primaryStage) {
         primaryStage.setTitle("Hello World!");
         Button btn = new Button();
-        btn.setText("Say 'Hello World'");
+        btn.setText("Say 'Hello JavaFX'");
         btn.setOnAction(new EventHandler<ActionEvent>() {
  
             @Override
             public void handle(ActionEvent event) {
-                System.out.println("Hello World!");
+                System.out.println("Hello JavaFX!");
             }
         });
         
